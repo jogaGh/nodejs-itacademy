@@ -1,5 +1,5 @@
 //NIVELL 1, EXERCICI 1
-console.log("Imprimir per pantalla el resultat d'una arrow function autoinvocable que sumi dos nombres.")
+console.log("NIVELL 1, EXERCICI 1: Imprimir per pantalla el resultat d'una arrow function autoinvocable que sumi dos nombres.")
 //-ENUNCIAT part 3: dos nombres.
 let addends = [Math.ceil(Math.random()*10**5)/100, Math.ceil(Math.random()*10**5)/100]
 //-ENUNCIAT part 2: una arrow function autoinvocable que sumi
@@ -40,7 +40,7 @@ console.log(sumaResult)
 */
 //=========================================================================================================================================
 //NIVELL 2 - EXERCICI 1
-console.log("Crear una arrow function que, rebent un paràmetre, retorni un objecte amb un atribut que tingui com a valor el paràmetre rebut")
+console.log("\nNIVELL 2 - EXERCICI 1: Crear una arrow function que, rebent un paràmetre, retorni un objecte amb un atribut que tingui com a valor el paràmetre rebut")
 let object = {}
 object = ( paramValue => {
     object.atr = paramValue
@@ -49,7 +49,7 @@ object = ( paramValue => {
 console.log(object)
 
 //NIVELL 2 - EXERCICI 2
-console.log("Crear una classe Persona que rebi un paràmetre 'nom' a l'ésser creat. La classe inclourà un mètode decirNombre que imprimeixi per consola el paràmetre 'Nom'")
+console.log("\nNIVELL 2 - EXERCICI 2: Crear una classe Persona que rebi un paràmetre 'nom' a l'ésser creat. La classe inclourà un mètode decirNombre que imprimeixi per consola el paràmetre 'Nom'")
 //-ENUNCIAT part 1: Crear una classe Persona que
 class Persona {
     //-ENUNCIAT part 2: rebi un paràmetre 'nom' a l'ésser creat
@@ -66,7 +66,7 @@ let Luis = new Persona('Luis')
 Luis.decirNombre()
 //=========================================================================================================================================
 //NIVELL 3 - EXERCICI 1
-console.log("Crear una function creadora d'objectes, abstraient la definició de les classes. Invocar-amb diferents definicions.")
+console.log("\nNIVELL 3 - EXERCICI 1: Crear una function creadora d'objectes, abstraient la definició de les classes. Invocar-amb diferents definicions.")
 function createObjectWithoutEmployClasses(chosenClass, propertyValue= "valor predeterminat de la propietat d'un objecte creat sense classes") {
     let object = { commonAttr: chosenClass }
     switch (chosenClass) {
