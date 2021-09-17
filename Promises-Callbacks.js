@@ -1,21 +1,30 @@
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms)
+    })
+}
 //NIVELL 1
 /*  EXERCICI 1
     Crear una function que retorni una Promise que invoqui la funcion resolve() o bé reject() que rep.
     Invocar-la des de fora passant-li totes dues funcions que imprimeixin un missatge diferent en cada cas.
 */
-let myRandomPairPromise = new Promise((resolve, reject) => {
-    let number = Math.ceil(Math.random()*100)
-    console.log(number)
-    let promiseFunction
-    if(number%2==0){
-        promiseFunction = 'resolve'
-        resolve("Èxit! S'ha trobat un número par \n")
-    } else{
-        promiseFunction = 'reject'
-        reject("No s'ha generat un nombre par amb èxit \n")
-    }
-    console.log(`myRandomPairPromise end, ${promiseFunction} function will be executed`)
-})
+let myRandomPairFunction = (resolve, reject) => {
+    return new Promise((resolve, reject) => {
+        let number = Math.ceil(Math.random()*100)
+        console.log(`nombre generat: ${number}`)
+        let promiseFunction
+        if(number%2==0){
+            promiseFunction = 'resolve'
+            resolve("Èxit! S'ha trobat un número par \n")
+        } else{
+            promiseFunction = 'reject'
+            reject("No s'ha generat un nombre par amb èxit \n")
+        }
+        console.log(`la promesa retornada per myRandomPairFunction conclourà executant la funció ${promiseFunction} rebuda`)
+    })
+    .then(resolve)
+    .catch(reject)
+}
 
 let functionResolve = (successMessage = `Èxit! \n`) => {
     console.log(`SUCCESS ${successMessage}`)
@@ -24,10 +33,8 @@ let functionReject = (failureMessage = "Error \n") => {
     console.log(`FAILURE ${failureMessage}`)
 }
 
-let myRP = myRandomPairPromise
-    //Invocar-la des de fora passant-li totes dues funcions que imprimeixin un missatge diferent en cada cas.
-    .then(functionResolve)
-    .catch(functionReject)
+//Invocar-la des de fora passant-li totes dues funcions que imprimeixin un missatge diferent en cada cas.
+myRandomPairFunction(functionResolve, functionReject)
 
 /*  EXERCICI 2
     Crear una arrow function que, rebent un paràmetre i una function callback, li passi a la funció un missatge o
@@ -39,16 +46,12 @@ let myArrowFunction = (myParam, cb) => {
     cb(message)
 }
 
-setTimeout(() => {
+(async () => {
+    await sleep()
     myArrowFunction('abc', console.log)
     myArrowFunction(123, console.log)
-}, 1000)
-
+})()
 //NIVELL 2
-/*  EXERCICI 1
-    Donats els objectes employees i salaries, creu una arrow function getEmpleado que retorni una
-    Promise efectuant la cerca en l'objecte pel seu id.
-*/
 let employees = [
     {id: 1, name: 'Linux Torvalds'},
     {id: 2, name: 'Bill Gates'},
@@ -59,14 +62,17 @@ let salaries = [
     {id: 2, salary: 1000},
     {id: 3, salary: 2000}
 ]
+/*  EXERCICI 1
+    Donats els objectes employees i salaries, creu una arrow function getEmpleado que retorni una
+    Promise efectuant la cerca en l'objecte pel seu id.
+*/
 let getEmpleado = (id) => {
     return new Promise((resolve, reject) => {
-        console.log('\n')
-        console.log('getEmpleado')
+        process.stdout.write('\nexecutant getEmpleado, ')
         let employeeInfo = {}
         let employee = employees.find(employee => employee['id']==id)
         if (employee) {
-            console.log('employee', employee)
+            process.stdout.write(`employee { id: ${employee['id']}, name: '${employee['name']}' }, `)
             functionResolve('at getEmpleado')
             resolve(employee)
         } else {
@@ -80,51 +86,65 @@ let getEmpleado = (id) => {
     el seu salari.
 */
 let getSalario = (employee) => {
-    return new Promise((resolve, reject) => {
-        console.log('getSalario')
+    /*return new Promise((resolve, reject) => {
+        console.log('executant getSalario')
         let message = 'at getSalario'
-        try {
-            let salaryObject = salaries.find(salary => salary['id']==employee['id'])
-            if (salaryObject['salary']) {
-                console.log('salary', salaryObject['salary'])
-                resolve(message)
-            } else {
-                reject(message)
-            }
-        } catch {
+        let salaryObject = salaries.find(salary => salary['id']==employee['id'])
+        if (salaryObject) {
+            console.log('salary', salaryObject['salary'])
+            resolve(message)
+        } else {
             reject(message)
         }
-    }) 
-} //getSalario({id: 3,name: 'Jeff Bezos'})
+    })*/
+    process.stdout.write('executant getSalario, ')
+    let salaryObject = salaries.find(salary => salary['id'] == employee['id'])
+    if (salaryObject) {
+        return salaryObject['salary']        
+    }
+    return null
+} 
 
-/*  EXERCICI 3
-    Invoqui la primera Promise getEmpleado i posteriorment getSalario, niant l'execució de les
-    dues promises.
-*/
-setTimeout(() => {
-    getEmpleado(1).then((employee) => getSalario(employee).then(functionResolve))
-}, 2000)
+function displaySalary(employee){
+    let salary = getSalario(employee)
+    msgSalary(salary)
+}
+function msgSalary(salary){
+    console.log('salari', salary ? salary : 'no trobat')
+}
 
-//NIVELL 3
-/*  EXERCICI 1
-    Fixi un element catch a la invocació de la fase anterior que capturi qualsevol error i l'imprimeixi per consola.
-*/
-setTimeout(() => {
-    getEmpleado(3)
-    .then(
-        (employee) => getSalario(employee)
-        .then(functionResolve)
-        .catch(functionReject)
+(async () => {
+    await sleep(100)
+    /*  EXERCICI 3
+        Invoqui la primera Promise getEmpleado i posteriorment getSalario, niant l'execució de les
+        dues promises.
+    */
+    getEmpleado(1).then(
+        (employee) => {
+            let salari = getSalario(employee) //.then(functionResolve).catch(functionReject))
+            msgSalary(salari)
+        }
     )
-    .catch(functionReject)
-
-    setTimeout(() => {
-        getEmpleado(4)
-        .then(
-            (employee) => getSalario(employee)
-            .then(functionResolve)
-            .catch(functionReject)
-        )
+    .then(() => {
+//NIVELL 3
+        /*  EXERCICI 1
+            Fixi un element catch a la invocació de la fase anterior que capturi qualsevol error i l'imprimeixi per consola.
+        */
+        getEmpleado(3)
+        .then((employee) => {
+            displaySalary(employee)
+        })
         .catch(functionReject)
-    }, 1000)
-}, 2000)
+
+        .then(() => {
+            getEmpleado(4)
+            .then((employee) => {
+                displaySalary(employee)
+            })
+            .catch(functionReject)
+            .then(() => {
+                displaySalary({})
+            })
+        })
+    })
+})()
