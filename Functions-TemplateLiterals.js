@@ -15,8 +15,8 @@
 	let nom = 'Alberto'
 	let cognoms = 'Pérez Gutiérrez'
 	function myTag(strings, nom, cognoms){
-		let str0 = strings[0]; // "Ese "
-		let str1 = strings[1]; // " es un "
+		let str0 = strings[0]; // "Nom: "
+		let str1 = strings[1]; // ". Cognoms: "
 
 		console.log (`${str0}${nom}${str1}${cognoms}`);
 	}
@@ -25,19 +25,10 @@
 /*	EXERCICI 2
 	Invocar la funció mitjançant template literals
 */
-	function plantilla(strings, ...keys) {
-	 	return (function(...values) {
-	    	let dictionary = values[values.length - 1] || {};
-	    	let result = [strings[0]];
-	    	keys.forEach(function(key, i) {
-	    		let value = Number.isInteger(key) ? values[key] : dictionary[key];
-	    		result.push(value, strings[i + 1]);
-	    	});
-	    	console.log(result.join(''));
-		});
+	function retorna_valor(argument) {
+		return `valor retornat és ${nom} ${cognoms}`
 	}
-	let closure = plantilla`Nom: ${'name'}. Cognoms: ${'surnames'}.`;
-	closure({name: 'Microsoft', surnames: 'Developer Network'})
+	console.log(`Cridamt funció des d'una plantilla literal: ${retorna_valor()}`)
 
 //Nivell 3
 /*	EXERCICI 1
@@ -52,9 +43,9 @@
 		console.log()
 	}
 	let matriu = new Array(10)
+	matriu.fill(print_numbers)
 	for (var i = 0; i < matriu.length; i++) {
-		matriu[i] = print_numbers()
-		matriu[i]
+		matriu[i]()
 	}
 
 /*	EXERCICI 2
