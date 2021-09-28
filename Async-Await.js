@@ -15,20 +15,28 @@ let salaries = [
     Promise efectuant la cerca en l'objecte pel seu id. Creu una altra arrow function getSalario que
     rebi com a paràmetre un objecte Employee i retorni el seu salari.
 */
-let getEmpleado = (id) => {
+let getEmpleado = (id, resolve) => {
     return new Promise((resolve, reject) => {
         let employeeInfo = {}
         let employee = employees.find(employee => employee['id']==id)
-        resolve(employee)
+        if (employee) {
+            resolve(employee)
+        } else {
+            reject('empleat no trobat')
+        }
     })
 }
 let getSalario = (employee) => {
-    let salaryObject = salaries.find(salary => salary['id'] == employee['id'])
-    if (salaryObject) {
-        return salaryObject['salary']
+    if (employee && employee['id']) {
+        let salaryObject = salaries.find(salary => salary['id'] == employee['id'])
+        if (salaryObject) {
+            return salaryObject['salary']
+        }
+        return 'salari no trobat'
     }
-    return null
+    return "s'ha de passar un objecte employee com argument"
 }
+
 
 // EXERCICI 2
 /*  Creu una funció asíncrona que, rebent un id d'empleat, imprimeixi per pantalla el nom de
@@ -36,27 +44,17 @@ let getSalario = (employee) => {
 */
 async function display_employee(id) {
     console.log(`id: ${id}`)
-    let employee = await getEmpleado(id)
-    if (employee) {
-        process.stdout.write(`nom: ${employee['name']}, `)
+    try {
+        let employee = await getEmpleado(id)
         let salary = getSalario(employee)
-        if (salary) {
-            console.log(`salari: ${salary}`)
-        } else {
-            console.log('salari no trobat')
-        }
-    } else {
-        console.log('empleat no trobat')
-    }
-    console.log()
-}
-
-async function executing_display_eployee(...ids){
-    for (var i = 0; i < ids.length; i++) {
-        await display_employee(ids[i])
+        console.log(employee['name'], salary)
+    } catch (e) {
+        console.log(e)
     }
 }
-executing_display_eployee(3,4,6)
+display_employee(3)
+display_employee(4)
+display_employee(6)
 
 //NIVELL 2
 /*  EXERCICI 1
@@ -70,11 +68,7 @@ function return_promise_timeout(ms) {
             /*  EXERCICI 1
                 Capturi tots els errors possibles del Nivell 2.
             */
-            try{
-                resolve('solved')
-            } catch(e){
-                reject(e)
-            }
+            resolve('solved')
         }, ms)
     })
 }
@@ -85,6 +79,7 @@ async function async_timeout(ms = 2000) {
         console.log('promise result:', promiseResult)
     } catch(e){
         console.log(e)
+        console.log('catch finished')
     }
 }
 
